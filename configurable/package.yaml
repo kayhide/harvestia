@@ -24,7 +24,9 @@ dependencies:
   - exceptions
   - extensible
   - filepath
+  - generic-lens
   - lens
+  - monad-logger
   - mtl
   - primitive
   - stm
