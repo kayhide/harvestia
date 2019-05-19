@@ -1,0 +1,91 @@
+name:                configurable-database
+version:             0.1.0.0
+homepage:            https://github.com/kayhide/configurable-database
+license:             BSD3
+author:              Hideaki KAWAI
+maintainer:          kayhide@gmail.com
+copyright:           kayhide
+category:            Configuration, Configurable
+#synopsis:
+description: |
+  Configurable Database
+
+extra-source-files:
+  - README.md
+
+dependencies:
+  - async
+  - base
+  - bytestring
+  - classy-prelude
+  - configurable
+  - containers
+  - deepseq
+  - directory
+  - exceptions
+  - extensible
+  - filepath
+  - generic-lens
+  - lens
+  - mtl
+  - primitive
+  - resource-pool
+  - selda
+  - selda-postgresql
+  - stm
+  - text
+  - time
+  - transformers
+  - typed-process
+  - unliftio
+  - unliftio-core
+  - unordered-containers
+  - vector
+
+default-extensions:
+  - AutoDeriveTypeable
+  - BangPatterns
+  - BinaryLiterals
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveDataTypeable
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - DerivingStrategies
+  - DoAndIfThenElse
+  - EmptyDataDecls
+  - ExistentialQuantification
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - KindSignatures
+  - LambdaCase
+  - MultiParamTypeClasses
+  - MultiWayIf
+  - NamedFieldPuns
+  - NoImplicitPrelude
+  - OverloadedLists
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternGuards
+  - PolyKinds
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TupleSections
+  - TypeApplications
+  - TypeFamilies
+  - TypeFamilyDependencies
+  - TypeOperators
+  - TypeSynonymInstances
+  - ViewPatterns
+
+library:
+  source-dirs: src
