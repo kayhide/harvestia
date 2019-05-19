@@ -1,13 +1,15 @@
 name:                configurable
 version:             0.1.0.0
-#synopsis:
-#description:
 homepage:            https://github.com/kayhide/configurable
 license:             BSD3
 author:              Hideaki KAWAI
 maintainer:          kayhide@gmail.com
 copyright:           kayhide
-category:            Web
+category:            Development
+#synopsis:
+description: |
+  Pluggable configuration support
+
 extra-source-files:
   - README.md
 
@@ -20,7 +22,9 @@ dependencies:
   - deepseq
   - directory
   - exceptions
+  - extensible
   - filepath
+  - lens
   - mtl
   - primitive
   - stm
@@ -40,12 +44,12 @@ default-extensions:
   - ConstraintKinds
   - DataKinds
   - DefaultSignatures
-  - DeriveAnyClass
   - DeriveDataTypeable
   - DeriveFoldable
   - DeriveFunctor
   - DeriveGeneric
   - DeriveTraversable
+  - DerivingStrategies
   - DoAndIfThenElse
   - EmptyDataDecls
   - ExistentialQuantification
@@ -73,6 +77,8 @@ default-extensions:
   - TupleSections
   - TypeApplications
   - TypeFamilies
+  - TypeFamilyDependencies
+  - TypeOperators
   - TypeSynonymInstances
   - ViewPatterns
 
