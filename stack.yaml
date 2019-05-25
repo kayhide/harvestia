@@ -2,6 +2,7 @@ resolver: lts-13.5
 packages:
   - configurable
   - configurable-database
+  - renkon
 
 extra-deps:
   - extensible-0.5

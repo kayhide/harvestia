@@ -1,0 +1,99 @@
+name:                renkon
+version:             0.1.0.0
+homepage:            https://github.com/kayhide/renkon
+license:             BSD3
+author:              Hideaki KAWAI
+maintainer:          kayhide@gmail.com
+copyright:           2017 kayhide
+category:            Development
+#synopsis:
+description: |
+  Text based template manager
+
+extra-source-files:
+  - README.md
+
+dependencies:
+  - aeson
+  - ansi-terminal
+  - base
+  - classy-prelude
+  - directory
+  - file-embed
+  - filemanip
+  - filepath
+  - foldl
+  - formatting
+  - inflections
+  - lens
+  - mtl
+  - optparse-applicative
+  - path
+  - path-io
+  - process
+  - stache
+  - text
+  - transformers
+
+default-extensions:
+  - AutoDeriveTypeable
+  - BangPatterns
+  - BinaryLiterals
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DeriveDataTypeable
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - DoAndIfThenElse
+  - EmptyDataDecls
+  - ExistentialQuantification
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - KindSignatures
+  - LambdaCase
+  - MultiParamTypeClasses
+  - MultiWayIf
+  - NamedFieldPuns
+  - NoImplicitPrelude
+  - OverloadedLists
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternGuards
+  - PolyKinds
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TupleSections
+  - TypeApplications
+  - TypeFamilies
+  - TypeSynonymInstances
+  - ViewPatterns
+
+library:
+  source-dirs:      src
+
+executables:
+  renkon:
+    source-dirs: app/renkon
+    main: Main.hs
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - renkon
+
+  dev:
+    source-dirs: app/dev
+    main: Main.hs
+    dependencies:
+      - renkon
