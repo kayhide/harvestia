@@ -2,8 +2,8 @@ module Main where
 
 import ClassyPrelude
 
-import qualified Renkon.Cli as Cli
+import Renkon.Command
 
 
 main :: IO ()
-main = Cli.run
+main = run

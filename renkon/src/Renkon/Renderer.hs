@@ -2,48 +2,58 @@ module Renkon.Renderer where
 
 import ClassyPrelude hiding ((</>))
 
+import Control.Monad.Catch.Pure (runCatch)
 import Data.Aeson (Value)
-import Data.FileEmbed
-import Formatting
-import Options.Applicative
 import Path
-import Renkon.Config
-import Renkon.Template
+import Path.IO (ensureDir)
 import Renkon.Util
-import Text.Mustache (compileMustacheFile, compileMustacheText, renderMustache)
-
-
-render :: Template -> Path Abs Dir -> Value -> IO ()
-render template'@Template { path } dst binding = do
-  templateFiles <- listTemplateFiles template'
-  xs <- traverse (process binding path dst) templateFiles
-  traverse_ print' xs
-
-  where
-    print' :: (Path Rel File, Text) -> IO ()
-    print' (file', content') = do
-      say ""
-      withColor Cyan $ do
-        say . pack $ toFilePath file'
-      withVivid Black $ do
-        say content'
+import Text.Mustache (compileMustacheText, renderMustache)
 
 
 process
-  :: Value
-  -> Path Abs Dir               -- ^ Source directory
-  -> Path Abs Dir               -- ^ Destination directory
-  -> Path Rel File              -- ^ File path to be interpolated
-  -> IO (Path Rel File, Text)   -- ^ File path and its content filled with the binding
-process binding src dst path = do
-  let path' = toFilePath path
-  pathTemp <- case compileMustacheText "path" $ pack path' of
-    Left err    -> fail $ show err
-    Right temp' -> pure temp'
-  let path'' = renderMustache pathTemp binding
-  path''' <- parseRelFile (unpack path'')
+  :: MonadIO m
+  => Value                   -- ^ Binding injecting to the template
+  -> FilePath                -- ^ Source directory
+  -> ByteString              -- ^ File path to be interpolated
+  -> m (Path Rel File, Text) -- ^ File path and its content filled with the binding
+process binding path' body' = do
+  pathTemp <- either throwIO pure $ compileMustacheText "path" $ pack path'
+  path'' <- either throwIO pure $ runCatch $
+    parseRelFile $ unpack $ renderMustache pathTemp binding
 
-  contentTemp <- compileMustacheFile $ toFilePath $ src </> path
-  let content' = renderMustache contentTemp binding
+  bodyTemp <- either throwIO pure $ compileMustacheText "body" $ decodeUtf8 body'
+  let body'' = renderMustache bodyTemp binding
 
-  pure $ (path''', toStrict content')
+  pure (path'', toStrict body'')
+
+
+renderToFile
+  :: forall m.
+     (MonadIO m, MonadUnliftIO m)
+  => Value
+  -> FilePath
+  -> ByteString
+  -> m ()
+renderToFile binding path' body'  = do
+  (path'', body'') <- process binding path' body'
+  withColor Yellow $
+    say . pack $ toFilePath path''
+  ensureDir $ parent path''
+  writeFileUtf8 (toFilePath path'') body''
+
+renderToScreen
+  :: forall m.
+     (MonadIO m, MonadUnliftIO m)
+  => Value
+  -> FilePath
+  -> ByteString
+  -> m ()
+renderToScreen binding path' body'  = do
+  data' <- process binding path' body'
+  print' data'
+  where
+    print' :: (Path Rel File, Text) -> m ()
+    print' (path, body) = do
+      withColor Blue $
+        say . pack $ toFilePath path
+      say body

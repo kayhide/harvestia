@@ -1,50 +1,44 @@
-module Renkon.Cli where
+module Renkon.Cli
+  ( module X
+  , execRenkonParser
+  , inflections
+  )
+where
 
 import ClassyPrelude
 
-import Options.Applicative
+import Data.Aeson
+import Options.Applicative as X
 import qualified Renkon.Command.Exec as Exec
-import qualified Renkon.Command.Info as Info
-import qualified Renkon.Command.List as List
-import qualified Renkon.Command.Path as Path
+import Renkon.Inflector
+import System.Environment (lookupEnv)
 
 
-data CommandArgs
-  = ListCommand List.Args
-  | InfoCommand Info.Args
-  | ExecCommand Exec.Args
-  | PathCommand Path.Args
-  deriving (Eq, Show)
+execRenkonParser :: Parser a -> IO (a, Maybe Exec.Args)
+execRenkonParser parser = do
+  lookupEnv "RENKON_EXEC_ARGS"
+  >>= \case
+    Nothing -> execBare
+    Just x -> execWrapped $ words x
+  where
+    execWrapped args' = do
+      case getParseResult (execParserPure defaultPrefs (info execArgsParser idm) args') of
+        Nothing -> fail $ "Invalid exec args: " <> unwords args'
+        Just execArgs@Exec.Args {..} -> do
+          args'' <- handleParseResult $ execParserPure defaultPrefs (info parser idm) (unpack <$> args)
+          pure (args'', Just execArgs)
+
+    execArgsParser = subparser (command "exec" (info Exec.argsParser idm))
+
+    execBare = do
+      fmap (, Nothing) $ customExecParser (prefs showHelpOnEmpty) $ info (helper <*> parser) fullDesc
 
 
-argsParser :: Parser CommandArgs
-argsParser = hsubparser $
-  mconcat
-  [ command "list"
-    ( info (ListCommand <$> List.argsParser) $
-      progDesc "List available generators" )
-  , command "info"
-    ( info (InfoCommand <$> Info.argsParser) $
-      progDesc "Display the detail information of the generator" )
-  , command "exec"
-    ( info (ExecCommand <$> Exec.argsParser) $
-      progDesc "Execute the generator" )
-  , command "path"
-    ( info (PathCommand <$> Path.argsParser) $
-      progDesc "Display path informations" )
+inflections :: Text -> Value
+inflections x =
+  object
+  [ "camelcased" .= camelcase x
+  , "camelcased_headed" .= camelcaseWithHead x
+  , "cebabcased" .= cebabcase x
+  , "snakecased" .= snakecase x
   ]
-
-optionsParser :: ParserInfo CommandArgs
-optionsParser =
-  info (helper <*> argsParser)
-    . mconcat
-    $ [fullDesc, progDesc "Generator manager"]
-
-run :: IO ()
-run = do
-  args <- customExecParser (prefs showHelpOnEmpty) optionsParser
-  case args of
-    ListCommand args' -> List.run args'
-    InfoCommand args' -> Info.run args'
-    ExecCommand args' -> Exec.run args'
-    PathCommand args' -> Path.run args'

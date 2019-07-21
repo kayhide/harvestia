@@ -19,6 +19,7 @@ dependencies:
   - base
   - classy-prelude
   - directory
+  - exceptions
   - file-embed
   - filemanip
   - filepath
@@ -26,6 +27,7 @@ dependencies:
   - formatting
   - inflections
   - lens
+  - megaparsec
   - mtl
   - optparse-applicative
   - path
@@ -39,6 +41,7 @@ default-extensions:
   - AutoDeriveTypeable
   - BangPatterns
   - BinaryLiterals
+  - BlockArguments
   - ConstraintKinds
   - DataKinds
   - DefaultSignatures
@@ -48,6 +51,7 @@ default-extensions:
   - DeriveFunctor
   - DeriveGeneric
   - DeriveTraversable
+  - DerivingStrategies
   - DoAndIfThenElse
   - EmptyDataDecls
   - ExistentialQuantification

@@ -1,5 +1,5 @@
 module Renkon.Command.Exec
-  ( Args
+  ( Args (..)
   , argsParser
   , run
   ) where
@@ -12,12 +12,14 @@ import Path.IO (resolveDir')
 import Renkon.Config
 import Renkon.Generator
 import Renkon.Util
+import System.Environment (setEnv)
 
 
 data Args =
   Args
   { generator   :: Text
   , destination :: FilePath
+  , toScreen    :: Bool
   , args        :: [Text]
   }
   deriving (Eq, Show, Generic)
@@ -40,7 +42,13 @@ argsParser =
     , help "Destination directory"
     ]
   )
-  <*> some
+  <*> switch
+  ( mconcat
+    [ long "to-screen"
+    , help "Print to screen in spite of files"
+    ]
+  )
+  <*> many
   ( strArgument
   $ mconcat
     [ metavar "ARGS"
@@ -70,8 +78,11 @@ run Args {..} = do
 
 launch :: Generator -> [Text] -> IO ()
 launch Generator {..} args = do
+  setEnv "RENKON_EXEC_ARGS" . unpack . unwords =<< getArgs
   withColor White $ do
     say $ "  exe: " <> pack (toFilePath path)
     say $ "  args: " <> tshow args
   say ""
-  execute (toFilePath path) args
+  catch
+    do execute (toFilePath path) args
+    do \ (_ :: SomeException) -> pure ()
