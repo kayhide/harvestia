@@ -39,7 +39,7 @@ displayItemDetail gen'@Generator {..} = do
   withColor Yellow $
     say $ "  " <> pack (toFilePath path)
   withColor White $
-    traverse_ (say . ("    " <>)) . lines =<< execute' (toFilePath path) ["--help"]
+    traverse_ (say . ("  " <>)) . lines =<< execute' (toFilePath path) ["--help"]
   say ""
 
 

@@ -87,7 +87,7 @@ library:
 
 executables:
   renkon:
-    source-dirs: app/renkon
+    source-dirs: app
     main: Main.hs
     ghc-options:
       - -threaded
@@ -96,8 +96,9 @@ executables:
     dependencies:
       - renkon
 
+tests:
   dev:
-    source-dirs: app/dev
+    source-dirs: test/dev
     main: Main.hs
     dependencies:
       - renkon
