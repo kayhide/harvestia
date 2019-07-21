@@ -3,6 +3,7 @@ packages:
   - configurable
   - configurable-database
   - renkon
+  - renkon-renkon
 
 extra-deps:
   - extensible-0.5

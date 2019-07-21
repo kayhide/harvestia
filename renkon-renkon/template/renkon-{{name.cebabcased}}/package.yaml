@@ -1,0 +1,95 @@
+name:                renkon-{{name.cebabcased}}
+version:             0.1.0.0
+#synopsis:
+#description:
+homepage:            https://github.com/your-account/renkon-{{name.cebabcased}}
+license:             BSD3
+author:              TODO
+maintainer:          TODO
+copyright:           TODO
+category:            TODO
+extra-source-files:
+  - README.md
+  - template/**/*
+
+dependencies:
+  - async
+  - base
+  - bytestring
+  - classy-prelude
+  - containers
+  - deepseq
+  - directory
+  - exceptions
+  - filepath
+  - mtl
+  - primitive
+  - renkon
+  - stm
+  - text
+  - time
+  - transformers
+  - typed-process
+  - unliftio
+  - unliftio-core
+  - unordered-containers
+  - vector
+
+default-extensions:
+  - AutoDeriveTypeable
+  - BangPatterns
+  - BinaryLiterals
+  - BlockArguments
+  - ConstraintKinds
+  - DataKinds
+  - DefaultSignatures
+  - DeriveAnyClass
+  - DeriveDataTypeable
+  - DeriveFoldable
+  - DeriveFunctor
+  - DeriveGeneric
+  - DeriveTraversable
+  - DerivingStrategies
+  - DoAndIfThenElse
+  - EmptyDataDecls
+  - ExistentialQuantification
+  - FlexibleContexts
+  - FlexibleInstances
+  - FunctionalDependencies
+  - GADTs
+  - GeneralizedNewtypeDeriving
+  - InstanceSigs
+  - KindSignatures
+  - LambdaCase
+  - MultiParamTypeClasses
+  - MultiWayIf
+  - NamedFieldPuns
+  - NoImplicitPrelude
+  - OverloadedLists
+  - OverloadedStrings
+  - PartialTypeSignatures
+  - PatternGuards
+  - PolyKinds
+  - RankNTypes
+  - RecordWildCards
+  - ScopedTypeVariables
+  - StandaloneDeriving
+  - TupleSections
+  - TypeApplications
+  - TypeFamilies
+  - TypeSynonymInstances
+  - ViewPatterns
+
+
+executables:
+  renkon-{{name.cebabcased}}:
+    source-dirs: app
+    main: Main.hs
+
+tests:
+  dev:
+    source-dirs:
+      - app
+      - test/dev
+    main: DevMain.hs
+    buildable: false
