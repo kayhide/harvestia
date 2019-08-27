@@ -45,7 +45,7 @@ argsParser =
   <*> switch
   ( mconcat
     [ long "to-screen"
-    , help "Print to screen in spite of files"
+    , help "Print to screen instead of files"
     ]
   )
   <*> many

@@ -2,6 +2,7 @@ module Renkon.Renderer where
 
 import ClassyPrelude hiding ((</>))
 
+import Control.Monad.Reader (reader)
 import Control.Monad.Catch.Pure (runCatch)
 import Data.Aeson (Value)
 import Path
@@ -9,6 +10,46 @@ import Path.IO (ensureDir)
 import Renkon.Util
 import Text.Mustache (compileMustacheText, renderMustache)
 
+
+-- * Render data types
+
+data RenderConfig =
+  RenderConfig
+  { destination :: FilePath
+  , toScreen    :: Bool
+  }
+  deriving (Eq, Show, Generic)
+
+
+-- * Render monad
+
+newtype Render a = Render (ReaderT (Value, RenderConfig) IO a)
+  deriving newtype
+    ( Functor
+    , Applicative
+    , Monad
+    , MonadIO
+    , MonadUnliftIO
+    , MonadReader (Value, RenderConfig)
+    )
+
+runRender :: (Value, RenderConfig) -> Render a -> IO a
+runRender env (Render r) = runReaderT r env
+
+readBinding :: Render Value
+readBinding = reader fst
+
+readConfig :: Render RenderConfig
+readConfig = reader snd
+
+render :: (FilePath, ByteString) -> Render ()
+render (path', body') = do
+  binding' <- readBinding
+  render' <- bool renderToFile renderToScreen . toScreen <$> readConfig
+  render' binding' path' body'
+
+
+-- * Helper functions
 
 process
   :: MonadIO m
@@ -57,3 +98,5 @@ renderToScreen binding path' body'  = do
       withColor Blue $
         say . pack $ toFilePath path
       say body
+
+

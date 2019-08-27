@@ -1,5 +1,6 @@
 module Renkon.Cli
   ( module X
+  , execRenkon
   , execRenkonParser
   , inflections
   )
@@ -7,11 +8,28 @@ where
 
 import ClassyPrelude
 
+import Control.Monad.Reader (reader)
 import Data.Aeson
 import Options.Applicative as X
 import qualified Renkon.Command.Exec as Exec
 import Renkon.Inflector
+import Renkon.Renderer (Render, RenderConfig(..), runRender)
 import System.Environment (lookupEnv)
+
+
+execRenkon
+  :: Parser Value
+  -> Render r
+  -> IO r
+execRenkon parser render = do
+  (binding', execArgs) <- execRenkonParser parser
+  runRender (binding', maybe defConf toConf execArgs) render
+  where
+    defConf :: RenderConfig
+    defConf = RenderConfig "." False
+
+    toConf :: Exec.Args -> RenderConfig
+    toConf execArgs = RenderConfig (Exec.destination execArgs) (Exec.toScreen execArgs)
 
 
 execRenkonParser :: Parser a -> IO (a, Maybe Exec.Args)
