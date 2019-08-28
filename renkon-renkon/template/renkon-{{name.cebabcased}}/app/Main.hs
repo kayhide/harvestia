@@ -1,35 +1,25 @@
-{-# LANGUAGE DuplicateRecordFields #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Main where
 
 import ClassyPrelude
 
-import Renkon
-import Renkon.Cli
-import qualified Renkon.Command.Exec as Exec
+import Data.Aeson
+import Data.FileEmbed (embedDir)
+import Options.Applicative
+import Renkon (execRenkon, inflections, render)
 
 
-data Args = Args
-  { name :: Text
-  }
-  deriving (Eq, Show)
-
-argsParser :: Parser Args
-argsParser =
-  Args
-  <$> strArgument
-  ( mconcat
-    [ metavar "NAME"
-    , help "Name"
+argsParser :: Parser Value
+argsParser = do
+  name' <- strArgument
+    ( mconcat
+      [ metavar "NAME"
+      , help "Name"
+      ]
+    )
+  pure $ object
+    [ "name" .= inflections name'
     ]
-  )
-
-
-toBinding :: Args -> Value
-toBinding Args {..} =
-  object
-  [ "name" .= inflections name
-  ]
 
 
 templateData :: [(FilePath, ByteString)]
@@ -37,8 +27,6 @@ templateData = $(embedDir "template")
 
 
 main :: IO ()
-main = do
-  (args', execArgs) <- execRenkonParser argsParser
-  let toScreen = maybe False Exec.toScreen execArgs
-  let render' = bool renderToFile renderToScreen toScreen
-  traverse_ (uncurry $ render' (toBinding args')) templateData
+main =
+  execRenkon argsParser $
+    traverse_ render templateData

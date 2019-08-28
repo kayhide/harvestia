@@ -1,11 +1,12 @@
-{-# LANGUAGE ApplicativeDo #-}
 {-# LANGUAGE TemplateHaskell #-}
 module Main where
 
 import ClassyPrelude
 
-import Renkon
-import Renkon.Cli
+import Data.Aeson
+import Data.FileEmbed (embedDir)
+import Options.Applicative
+import Renkon (execRenkon, inflections, render)
 
 
 argsParser :: Parser Value

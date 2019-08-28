@@ -1,6 +1,5 @@
 module Renkon.Cli
-  ( module X
-  , execRenkon
+  ( execRenkon
   , execRenkonParser
   , inflections
   )
@@ -10,7 +9,7 @@ import ClassyPrelude
 
 import Control.Monad.Reader (reader)
 import Data.Aeson
-import Options.Applicative as X
+import Options.Applicative
 import qualified Renkon.Command.Exec as Exec
 import Renkon.Inflector
 import Renkon.Renderer (Render, RenderConfig(..), runRender)

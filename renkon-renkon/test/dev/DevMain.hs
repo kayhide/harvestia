@@ -9,12 +9,12 @@ import qualified Renkon.Command as Command
 
 main :: IO ()
 main = do
-  runCommandBare "LotusIpsum"
+  runCommand "LotusIpsum"
   -- runCommandWrapped "LotusIpsum"
 
 
-runCommandBare :: Text -> IO ()
-runCommandBare args = do
+runCommand :: Text -> IO ()
+runCommand args = do
   say $ "$ renkon exec renkon"
   bracket_
     do setEnv "RENKON_EXEC_ARGS" . unpack $ "exec --to-screen renkon " <> args
@@ -22,7 +22,8 @@ runCommandBare args = do
     Main.main
   say ""
 
--- | Wrapped version only updates after an executable is rebuilt.
+
+-- | Wrapped version updates only after an executable is rebuilt.
 runCommandWrapped :: Text -> IO ()
 runCommandWrapped args = do
   say $ "$ renkon exec renkon " <> args

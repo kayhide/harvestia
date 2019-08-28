@@ -13,29 +13,15 @@ extra-source-files:
   - template/**/*
 
 dependencies:
-  - async
+  - aeson
   - base
-  - bytestring
   - classy-prelude
-  - containers
-  - deepseq
-  - directory
-  - exceptions
-  - filepath
-  - mtl
-  - primitive
+  - file-embed
+  - optparse-applicative
   - renkon
-  - stm
-  - text
-  - time
-  - transformers
-  - typed-process
-  - unliftio
-  - unliftio-core
-  - unordered-containers
-  - vector
 
 default-extensions:
+  - ApplicativeDo
   - AutoDeriveTypeable
   - BangPatterns
   - BinaryLiterals
